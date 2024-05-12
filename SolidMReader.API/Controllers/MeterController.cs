@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using SolidMReader.Data.Context;
 using SolidMReader.Models.DTO;
@@ -15,12 +16,17 @@ public class MeterController : ControllerBase
     private readonly ILogger<MeterController> _logger;
     private readonly IMeterReadingsRepository _meterReadingsRepository;
     private readonly IValidation<MeterReading> _validateReadings;
+    private readonly ICsvMeterReadingsProcessor _meterReadingsProcessor;
 
-    public MeterController(ILogger<MeterController> logger, IMeterReadingsRepository meterReadingsRepository, IValidation<MeterReading> validateReadings)
+    public MeterController(ILogger<MeterController> logger, 
+        IMeterReadingsRepository meterReadingsRepository, 
+        IValidation<MeterReading> validateReadings,
+        ICsvMeterReadingsProcessor meterReadingsProcessor)
     {
         _logger = logger;
         _meterReadingsRepository = meterReadingsRepository;
         _validateReadings = validateReadings;
+        _meterReadingsProcessor = meterReadingsProcessor;
     }
     
     [HttpPost("meter-reading-uploads")]
@@ -33,22 +39,18 @@ public class MeterController : ControllerBase
 
             return BadRequest(error);
         }
+        
         List<MeterReading> validReadings = new ();
         List<MeterReading> failedReadings = new ();
-        
-        List<MeterReading> recordsToProcess = new ();
+
         try
         {
-            using var reader = new StreamReader(file.OpenReadStream());
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                recordsToProcess = csv.GetRecords<MeterReading>().ToList();
-
-            }
+            List<MeterReading> recordsToProcess = _meterReadingsProcessor.ProcessCsvToMeterReadings(file);
 
             foreach (var reading in recordsToProcess)
             {
-                if (_validateReadings.IsValid(reading))
+                if (_validateReadings.IsValid(reading) 
+                    && !validReadings.Any(x => x.AccountId == reading.AccountId && x.MeterReadValue == reading.MeterReadValue))
                 {
                     validReadings.Add(reading);
                 }
@@ -58,20 +60,30 @@ public class MeterController : ControllerBase
                 }
             }
 
-            var output = await _meterReadingsRepository.AddValidReadings(validReadings);
+            var savedValidMeterReadings = await _meterReadingsRepository.AddValidReadings(validReadings);
 
+            PostMeterReadingResult output = new()
+            {
+                Failed = failedReadings.Count,
+                FailedReading = failedReadings.Select(x => $"{x.AccountId} : {x.MeterReadingDateTime} : {x.MeterReadValue}").ToList()
+            };
+
+            if (savedValidMeterReadings)
+            {
+                output.Successful = validReadings.Count;
+            }
+            else
+            {
+                output.Failed += validReadings.Count;
+            }        
+            
             return Ok(output);
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "Issue Processing csv");
+            return BadRequest();
         }
-        //ToDo : validate each reading for the insert
-
-        
-        
-        var result = new PostMeterReadingResult();
-        return Ok(result);
     }
 
     [HttpGet("readings/{id}")]

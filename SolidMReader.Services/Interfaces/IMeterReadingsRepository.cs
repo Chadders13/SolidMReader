@@ -7,6 +7,7 @@ public interface IMeterReadingsRepository
     public Task<MeterReading> GetMeterReading(Guid meterReadingGuid);
 
     bool IsDuplicateForAccount(MeterReading reading);
-    Task<MeterReading?> AddValidReadings(List<MeterReading> validReadings);
+    Task<bool> AddValidReadings(List<MeterReading> validReadings);
     Task<MeterReading?> GetAccountLastMeterReading(int accountId);
+    bool IsLowerThanCurrentReading(MeterReading reading);
 }

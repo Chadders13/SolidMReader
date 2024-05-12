@@ -4,23 +4,19 @@ using SolidMReader.Services.Interfaces;
 
 namespace SolidMReader.Services.Validation;
 
-public class MeterReadingValidationRules : IValidation<MeterReading>
+public class MeterReadingValidationRules(
+    IMeterReadingsRepository meterReadingsRepository,
+    IAccountRepository accountRepository)
+    : IValidation<MeterReading>
 {
-    private readonly IMeterReadingsRepository _meterReadingsRepository;
-
-    public MeterReadingValidationRules(IMeterReadingsRepository meterReadingsRepository)
-    {
-        _meterReadingsRepository = meterReadingsRepository;
-    }
-    
     private bool IsDuplicateEntry(MeterReading reading)
     {
-        return _meterReadingsRepository.IsDuplicateForAccount(reading);
+        return meterReadingsRepository.IsDuplicateForAccount(reading);
     }
 
     private bool IsValidAccountId(MeterReading reading)
     {
-        return reading.AccountId > 0;
+        return reading.AccountId > 0 && accountRepository.AccountExists(reading.AccountId);
     }
     
     private static bool IsMeterReadingPosative(MeterReading reading)
@@ -30,14 +26,20 @@ public class MeterReadingValidationRules : IValidation<MeterReading>
 
     private bool IsValidMeterReadValue(MeterReading reading)
     {
-        return Regex.IsMatch(reading.MeterReadValue.ToString(), @"^0?[0-9]{5}$"); 
+        return Regex.IsMatch($"{reading.MeterReadValue:D5}", @"^0?[0-9]{5}$"); 
+    }
+    
+    private bool IsNewReadingLowerThanCurrentReading(MeterReading reading)
+    {
+        return meterReadingsRepository.IsLowerThanCurrentReading(reading);
     }
 
     public bool IsValid<T>(T reading) where T : MeterReading
     {
-        return !IsDuplicateEntry(reading) &&
-               IsValidAccountId(reading) &&
-               IsMeterReadingPosative(reading) &&
-               IsValidMeterReadValue(reading);
+        return   IsValidAccountId(reading) &&
+                 !IsDuplicateEntry(reading) &&
+                 IsMeterReadingPosative(reading) &&
+                 IsValidMeterReadValue(reading) &&
+                 !IsNewReadingLowerThanCurrentReading(reading);
     }
 }

@@ -3,6 +3,7 @@ using SolidMReader.Data.Context;
 using SolidMReader.Models.DTO;
 using SolidMReader.Services.Interfaces;
 using SolidMReader.Services.Repositories;
+using SolidMReader.Services.Services;
 using SolidMReader.Services.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,10 +20,12 @@ builder.Services.AddDbContext<SolidMReaderContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddControllers();
-
-builder.Services.AddSingleton<IMeterReadingsRepository, MeterReadingsRepository>();
+builder.Services.AddScoped<IMeterReadingsRepository, MeterReadingsRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IValidation<MeterReading>, MeterReadingValidationRules>();
+builder.Services.AddScoped<ICsvMeterReadingsProcessor, CsvMeterReadingsProcessor>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

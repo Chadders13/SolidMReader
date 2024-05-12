@@ -11,6 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"/>
         <PackageReference Include="xunit" Version="2.4.2"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -46,6 +47,20 @@
       </Content>
       <None Remove="TestCsvData\VaildMeterReadings_5_20240511.csv" />
       <Content Include="TestCsvData\VaildMeterReadings_5_20240511.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="TestCsvData\InvalidRowColumnDataInMeterReadings_1_20240511.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestCsvData\InvalidRowColumnDataInMeterReadings_1_20240511.csv" />
+      <Content Include="TestCsvData\InvalidRowColumnDataInMeterReadings_1_20240511.csv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="TestCsvData\LowerThanLastReadingMeterReadings_20240511.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestCsvData\LowerThanLastReadingMeterReadings_20240511.csv" />
+      <Content Include="TestCsvData\LowerThanLastReadingMeterReadings_20240511.csv">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
