@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.API", "SolidMReader.API\SolidMReader.API.csproj", "{55883DDE-9858-4A90-8E68-C545400FCC7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Test", "SolidMReader.Test\SolidMReader.Test.csproj", "{C6A80004-959E-467E-A688-2F520B69DC7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.DataMigrations", "SolidMReader.DataMigrations\SolidMReader.DataMigrations.csproj", "{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Data", "SolidMReader.Data\SolidMReader.Data.csproj", "{D73EB6DF-C19D-419A-810A-D8BEA2015779}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Models", "SolidMReader.Models\SolidMReader.Models.csproj", "{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Services", "SolidMReader.Services\SolidMReader.Services.csproj", "{EA7BB50D-0E2B-425F-845C-9C7C38A37212}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.UI", "SolidMReader.UI\SolidMReader.UI.csproj", "{8BF0CEA1-A601-409B-9ADF-EC79A60D44F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55883DDE-9858-4A90-8E68-C545400FCC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55883DDE-9858-4A90-8E68-C545400FCC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55883DDE-9858-4A90-8E68-C545400FCC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55883DDE-9858-4A90-8E68-C545400FCC7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A80004-959E-467E-A688-2F520B69DC7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A80004-959E-467E-A688-2F520B69DC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A80004-959E-467E-A688-2F520B69DC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A80004-959E-467E-A688-2F520B69DC7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA7BB50D-0E2B-425F-845C-9C7C38A37212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7BB50D-0E2B-425F-845C-9C7C38A37212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7BB50D-0E2B-425F-845C-9C7C38A37212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7BB50D-0E2B-425F-845C-9C7C38A37212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BF0CEA1-A601-409B-9ADF-EC79A60D44F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF0CEA1-A601-409B-9ADF-EC79A60D44F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF0CEA1-A601-409B-9ADF-EC79A60D44F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF0CEA1-A601-409B-9ADF-EC79A60D44F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

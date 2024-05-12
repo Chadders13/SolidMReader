@@ -1,0 +1,6 @@
+@SolidMReader.API_HostAddress = http://localhost:5253
+
+GET {{SolidMReader.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
