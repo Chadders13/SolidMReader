@@ -1,6 +1,6 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
+import { Login } from "./components/Login";
+import { Upload } from "./components/Upload";
 
 const AppRoutes = [
   {
@@ -10,6 +10,10 @@ const AppRoutes = [
   {
     path: '/upload',
     element: <Upload />
+  },
+  {
+    path: '/login',
+    element: <Login />
   }
 ];
 

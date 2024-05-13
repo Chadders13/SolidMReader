@@ -57,7 +57,7 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         
         var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
         var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
-
+        
         List<MeterReadingDto> meterReadings = new();
         
         using (FileStream fileStream = File.OpenRead(csvFilePath))
@@ -68,6 +68,7 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         _factory.SeedAccounts(meterReadings.Select(x => x.AccountId).ToList());
 
         // Act
+        await _factory.SetAuthorizationToken(client);
         var response = await client.PostAsync("/meter-reading-uploads", content);
 
         // Assert
@@ -104,6 +105,7 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         _factory.SeedAccounts(meterReadings.Select(x => x.AccountId).ToList());
 
         // Act
+        await _factory.SetAuthorizationToken(client);
         var response = await client.PostAsync("/meter-reading-uploads", content);
 
         // Assert
@@ -141,6 +143,7 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         _factory.SeedAccounts(meterReadings.Select(x => x.AccountId).ToList());
         
         // Act
+        await _factory.SetAuthorizationToken(client);
         var response = await client.PostAsync("/meter-reading-uploads", content);
 
         // Assert
@@ -211,6 +214,7 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         content.Add(fileContent);
 
         // Act
+        await _factory.SetAuthorizationToken(client);
         var response = await client.PostAsync("/meter-reading-uploads", content);
         
         //Assert
@@ -256,6 +260,47 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         _factory.SeedLowerReadings(meterReadings.ToList());
         
         // Act
+        await _factory.SetAuthorizationToken(client);
+        var response = await client.PostAsync("/meter-reading-uploads", content);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+
+        var resultContent = await response.Content.ReadAsStringAsync();
+        var jsonResult = JsonSerializer.Deserialize<PostMeterReadingResult>(resultContent, _jsonSerializerOptions);
+        
+        if (string.IsNullOrWhiteSpace(resultContent) || jsonResult == null)
+        {
+            Assert.Fail("Missing data");
+        }
+        
+        Assert.Equal(successReturnCount, jsonResult.Successful);
+        Assert.Equal(failedCount, jsonResult.Failed);
+    }
+    
+    [Theory]
+    [InlineData("InvalidColumDataInReadings_MeterReadingBlank_20240511.csv", 4, 2)]
+    [InlineData("InvalidColumDataInReadings_MeterReadingOutOfRange_20240511.csv", 3, 1)]
+    [InlineData("InvalidColumDataInReadings_TextInMeterReading_20240511.csv", 3, 1)]
+    public async Task PostCsv_WithInvlaidMeterReadings(string fileName, int successReturnCount, int failedCount)
+    {
+        // Arrange
+        var client = _factory.CreateClient();
+
+        var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
+        var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
+
+        List<MeterReadingDto> meterReadings = new();
+        
+        using (FileStream fileStream = File.OpenRead(csvFilePath))
+        {
+            meterReadings = CsvReaderHelper.ParseCsv(fileStream);
+        }
+        
+        _factory.SeedAccounts(meterReadings.Select(x => x.AccountId).ToList());
+        
+        // Act
+        await _factory.SetAuthorizationToken(client);
         var response = await client.PostAsync("/meter-reading-uploads", content);
 
         // Assert

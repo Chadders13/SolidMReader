@@ -40,6 +40,7 @@ public class MeterReadingValidationRules(
     
     private bool IsNewReadingLowerThanCurrentReading(MeterReading reading)
     {
-        return meterReadingsRepository.IsLowerThanCurrentReading(reading);
+        bool output = meterReadingsRepository.IsLowerThanCurrentReading(reading);
+        return output;
     }
 }

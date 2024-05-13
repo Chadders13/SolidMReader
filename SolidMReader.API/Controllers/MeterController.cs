@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SolidMReader.Data.Context;
 using SolidMReader.Models.DTO;
@@ -31,6 +33,7 @@ public class MeterController : ControllerBase
     }
     
     [HttpPost("meter-reading-uploads")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> EnterMeterReadings(IFormFile? file)
     {
         if (file == null)
@@ -43,18 +46,20 @@ public class MeterController : ControllerBase
         
         try
         {
-            List<MeterReading> recordsToProcess = _meterReadingsProcessor.ProcessCsvToMeterReadings(file);
+            ProcessCsvResult recordsToProcess = _meterReadingsProcessor.ProcessCsvToMeterReadings(file);
 
-            var readingsValidator = recordsToProcess.ValidateReadings(_validateReadings);
+            var readingsValidator = recordsToProcess.ValidMeterReadings.ValidateReadings(_validateReadings);
 
             var savedValidMeterReadings = await _meterReadingsRepository.AddValidReadings(readingsValidator.ValidReadings);
 
             PostMeterReadingResult output = new()
             {
-                Failed = readingsValidator.FailedReadings.Count,
-                FailedReadings = readingsValidator.FailedReadings.Select(x => $"{x.AccountId} : {x.MeterReadingDateTime} : {x.MeterReadValue}").ToList()
+                Failed = readingsValidator.FailedReadings.Count + recordsToProcess.FailedToParse.Count
             };
 
+            output.FailedReadings.AddRange(recordsToProcess.FailedToParse);
+            output.FailedReadings.AddRange(readingsValidator.FailedReadings.Select(x => $"{x.AccountId} : {x.MeterReadingDateTime} : {x.MeterReadValue}").ToList());
+            
             if (savedValidMeterReadings)
             {
                 output.Successful = readingsValidator.ValidReadings.Count;
