@@ -9,6 +9,15 @@ public class MeterReadingValidationRules(
     IAccountRepository accountRepository)
     : IValidation<MeterReading>
 {
+    public bool IsValid<T>(T reading) where T : MeterReading
+    {
+        return   IsValidAccountId(reading) &&
+                 !IsDuplicateEntry(reading) &&
+                 IsMeterReadingPosative(reading) &&
+                 IsValidMeterReadValue(reading) &&
+                 !IsNewReadingLowerThanCurrentReading(reading);
+    }
+    
     private bool IsDuplicateEntry(MeterReading reading)
     {
         return meterReadingsRepository.IsDuplicateForAccount(reading);
@@ -32,14 +41,5 @@ public class MeterReadingValidationRules(
     private bool IsNewReadingLowerThanCurrentReading(MeterReading reading)
     {
         return meterReadingsRepository.IsLowerThanCurrentReading(reading);
-    }
-
-    public bool IsValid<T>(T reading) where T : MeterReading
-    {
-        return   IsValidAccountId(reading) &&
-                 !IsDuplicateEntry(reading) &&
-                 IsMeterReadingPosative(reading) &&
-                 IsValidMeterReadValue(reading) &&
-                 !IsNewReadingLowerThanCurrentReading(reading);
     }
 }

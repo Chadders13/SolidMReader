@@ -31,8 +31,8 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
                     services.Remove(descriptor);
                 }
                 
-                services.AddDbContext<SolidMReaderContext>(options => // Replace with your actual DbContext
-                    options.UseInMemoryDatabase("TestDb"));  // Choose a unique name 
+                services.AddDbContext<SolidMReaderContext>(options =>
+                    options.UseInMemoryDatabase("SolidMReaderTestDb")); 
             });
         });
     }
@@ -55,12 +55,8 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         // Arrange
         var client = _factory.CreateClient();
         
-        var projectDirectory = Directory.GetCurrentDirectory(); 
-        var testDataFolder = Path.Combine(projectDirectory, "TestCsvData"); 
-        var csvFilePath = Path.Combine(testDataFolder, fileName); 
-
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(File.ReadAllBytes(csvFilePath));
+        var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
+        var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
 
         List<MeterReadingDto> meterReadings = new();
         
@@ -70,9 +66,6 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         }
         
         _factory.SeedAccounts(meterReadings.Select(x => x.AccountId).ToList());
-
-        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/csv");
-        content.Add(fileContent, "file", fileName);
 
         // Act
         var response = await client.PostAsync("/meter-reading-uploads", content);
@@ -98,14 +91,8 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         // Arrange
         var client = _factory.CreateClient();
         
-        var projectDirectory = Directory.GetCurrentDirectory();
-        var testDataFolder = Path.Combine(projectDirectory, "TestCsvData"); 
-        var csvFilePath = Path.Combine(testDataFolder, fileName);
-
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(File.ReadAllBytes(csvFilePath));
-        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/csv");
-        content.Add(fileContent, "file", fileName);
+        var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
+        var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
         
         List<MeterReadingDto> meterReadings = new();
         
@@ -141,14 +128,8 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         // Arrange
         var client = _factory.CreateClient();
         
-        var projectDirectory = Directory.GetCurrentDirectory();
-        var testDataFolder = Path.Combine(projectDirectory, "TestCsvData");
-        var csvFilePath = Path.Combine(testDataFolder, fileName);
-
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(File.ReadAllBytes(csvFilePath));
-        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/csv");
-        content.Add(fileContent, "file", fileName);
+        var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
+        var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
 
         List<MeterReadingDto> meterReadings = new();
         
@@ -260,15 +241,9 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
     {
         // Arrange
         var client = _factory.CreateClient();
-        
-        var projectDirectory = Directory.GetCurrentDirectory();
-        var testDataFolder = Path.Combine(projectDirectory, "TestCsvData");
-        var csvFilePath = Path.Combine(testDataFolder, fileName);
 
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(File.ReadAllBytes(csvFilePath));
-        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/csv");
-        content.Add(fileContent, "file", fileName);
+        var csvFilePath = CsvReaderHelper.GetCsvFilePath(fileName);
+        var content = CsvReaderHelper.GetCsvContent(csvFilePath, fileName);
 
         List<MeterReadingDto> meterReadings = new();
         
@@ -297,8 +272,4 @@ public class MeterReadingPost : IClassFixture<WebApplicationFactory<Program>>, I
         Assert.Equal(successReturnCount, jsonResult.Successful);
         Assert.Equal(failedCount, jsonResult.Failed);
     }
-    
-    //ToDo : handel lower than last reading check
-    //ToDo : add in memory db to test
-    //ToDo : check for adding the correct values to DB only on POST
 }

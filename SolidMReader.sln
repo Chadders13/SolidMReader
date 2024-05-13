@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.API", "SolidMR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Test", "SolidMReader.Test\SolidMReader.Test.csproj", "{C6A80004-959E-467E-A688-2F520B69DC7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.DataMigrations", "SolidMReader.DataMigrations\SolidMReader.DataMigrations.csproj", "{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Data", "SolidMReader.Data\SolidMReader.Data.csproj", "{D73EB6DF-C19D-419A-810A-D8BEA2015779}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidMReader.Models", "SolidMReader.Models\SolidMReader.Models.csproj", "{CA3323AC-DCA9-4F94-B8A6-43B44D690EDA}"
@@ -28,10 +26,6 @@ Global
 		{C6A80004-959E-467E-A688-2F520B69DC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A80004-959E-467E-A688-2F520B69DC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A80004-959E-467E-A688-2F520B69DC7F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B747A9D-82D8-4FE1-B471-F8C4D16C7EBA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D73EB6DF-C19D-419A-810A-D8BEA2015779}.Release|Any CPU.ActiveCfg = Release|Any CPU

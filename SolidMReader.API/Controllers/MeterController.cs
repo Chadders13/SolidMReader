@@ -4,6 +4,7 @@ using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using SolidMReader.Data.Context;
 using SolidMReader.Models.DTO;
+using SolidMReader.Models.Extensions;
 using SolidMReader.Models.ViewModels;
 using SolidMReader.Services.Interfaces;
 
@@ -40,41 +41,27 @@ public class MeterController : ControllerBase
             return BadRequest(error);
         }
         
-        List<MeterReading> validReadings = new ();
-        List<MeterReading> failedReadings = new ();
-
         try
         {
             List<MeterReading> recordsToProcess = _meterReadingsProcessor.ProcessCsvToMeterReadings(file);
 
-            foreach (var reading in recordsToProcess)
-            {
-                if (_validateReadings.IsValid(reading) 
-                    && !validReadings.Any(x => x.AccountId == reading.AccountId && x.MeterReadValue == reading.MeterReadValue))
-                {
-                    validReadings.Add(reading);
-                }
-                else
-                {
-                    failedReadings.Add(reading);
-                }
-            }
+            var readingsValidator = recordsToProcess.ValidateReadings(_validateReadings);
 
-            var savedValidMeterReadings = await _meterReadingsRepository.AddValidReadings(validReadings);
+            var savedValidMeterReadings = await _meterReadingsRepository.AddValidReadings(readingsValidator.ValidReadings);
 
             PostMeterReadingResult output = new()
             {
-                Failed = failedReadings.Count,
-                FailedReading = failedReadings.Select(x => $"{x.AccountId} : {x.MeterReadingDateTime} : {x.MeterReadValue}").ToList()
+                Failed = readingsValidator.FailedReadings.Count,
+                FailedReadings = readingsValidator.FailedReadings.Select(x => $"{x.AccountId} : {x.MeterReadingDateTime} : {x.MeterReadValue}").ToList()
             };
 
             if (savedValidMeterReadings)
             {
-                output.Successful = validReadings.Count;
+                output.Successful = readingsValidator.ValidReadings.Count;
             }
             else
             {
-                output.Failed += validReadings.Count;
+                output.Failed += readingsValidator.ValidReadings.Count;
             }        
             
             return Ok(output);

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.Http.Headers;
 using CsvHelper;
 using CsvHelper.Configuration;
 using SolidMReader.Models.DTO;
@@ -30,5 +31,22 @@ public static class CsvReaderHelper
         }
 
         return output;
+    }
+
+    public static string GetCsvFilePath(string fileName)
+    {
+        var projectDirectory = Directory.GetCurrentDirectory();
+        var testDataFolder = Path.Combine(projectDirectory, "TestCsvData");
+        return Path.Combine(testDataFolder, fileName);
+    }
+    
+    public static MultipartFormDataContent GetCsvContent(string csvFilePath, string fileName)
+    {
+        var content = new MultipartFormDataContent();
+        var fileContent = new ByteArrayContent(File.ReadAllBytes(csvFilePath));
+        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/csv");
+        content.Add(fileContent, "file", fileName);
+
+        return content;
     }
 }
